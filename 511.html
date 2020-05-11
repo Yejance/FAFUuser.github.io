@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html>
+  <head>
+     <META NAME="Generator" CONTENT="EditPlus">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<META NAME="Author" CONTENT="">
+	<META NAME="Keywords" CONTENT="">
+	<META NAME="Description" CONTENT="">
+	<meta http-equiv="X-UA-Compatible" content="IE=7" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>上海市紧急事件收集调查应用</title>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        height: 100%;
+        width: 100%;
+      }
+	table{
+	            border: 1px solid;
+	            margin : auto;
+	            width: 450px;
+	        }
+	        td{
+	            border: 1px solid;
+	        }
+		
+		
+		
+		
+		*{margin:0;padding:0;}
+		.fa{width:400px;}
+		.top{margin:20px 0;}
+		.top input{width:25px;height:25px;border:1px solid #fff;border-radius:4px;background:#ddd;}
+		.top .i1{background:#000000;}
+		.top .i2{background:#FF0000;}
+		.top .i3{background:#80FF00;}
+		.top .i4{background:#00FFFF;}
+		.top .i5{background:#808080;}
+		.top .i6{background:#FF8000;}
+		.top .i7{background:#408080;}
+		.top .i8{background:#8000FF;}
+		.top .i9{background:#CCCC00;}
+		#canvas{background:#eee;cursor:default;}
+		.font input{font-size:14px;}
+		.top .grea{background:#aaa;}
+		
+		
+		
+		</style>
+    </style>
+     <style type="text/css">
+		 .box0{
+		  width: 100%;
+		  height: 8%;
+		  display: inline-block;
+		 
+		 }
+		 .box1{
+			 width: 100%;
+			 height:40%;
+			 margin-top: 0.9375rem;
+			display: inline-block; 
+			
+			
+		 }
+		 .box3{
+			 width: 65%;
+			 height: 100%;
+			 margin-left: 0.9375rem;
+			 margin-right: 0.9375rem;
+			 margin-bottom: 0.9375rem;
+			 display: inline-block;
+			 margin-top: 2.5rem;
+		 }
+		 .box4{
+			width: 15%;
+			height: 100%;
+			margin-left: 4%;
+			margin-right: 0.9375rem;
+			margin-bottom: 0.9375rem;
+			margin-top: 0.9375rem;
+			display: inline-block;
+			
+			
+		 }
+		 .box5{
+		 			 width: 100%;
+		 			 height:40%;
+		 			
+
+		 			display: inline-block; 
+		 }
+		 .box6{
+			 width: 30%;
+			 height: 100%;
+			 margin-left: 0.9375rem;
+			 margin-right: 0.9375rem;
+			 margin-bottom: 0.9375rem;
+			 display: inline-block;
+		 }
+		 .box7{
+			 width: 100%;
+			 height: 90%;
+		 }
+		 .box8{
+			 background: skyblue;
+		 }
+		 .box9{
+			 margin-left: 20%;
+             font-family: "微软雅黑";
+			 font-size: 1.875rem;
+			 margin-top: 1.125rem;
+		 }
+		 
+		 .box10{
+			 width: 100%;
+			 height:10%;
+			 display: inline-block; 
+			 margin-left: 20%;
+			 margin-top: 0.625rem;
+		 }
+		 .box11{
+		
+              margin-top: 5rem;
+		 }
+         .box12{
+			 width: 100%;
+			 height: 10%;
+			 font-family: "微软雅黑";
+			 font-size: 1.25rem;
+		
+		 }
+      
+		 .box13{
+			 
+			 width: 100%;
+			 height: 80%;
+			 margin-top: 5%;
+		 }     
+		 .box14{
+			 font-family: "微软雅黑";
+			 font-size: 1.25rem;
+		 }
+	 </style>
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.15/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.15/"></script>
+
+    <script>
+    	require([
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/layers/FeatureLayer",
+        "esri/layers/TileLayer",
+        "esri/widgets/Legend",
+        "esri/widgets/ScaleBar",
+		"esri/widgets/Compass",
+		"esri/widgets/Editor",
+		"esri/widgets/FeatureForm",
+		"esri/widgets/NavigationToggle"
+      ], function (Map, MapView, FeatureLayer, TileLayer, Legend, ScaleBar,Compass,Editor,NavigationToggle) {
+      	var flayer = new FeatureLayer({
+      		url:
+            "https://www.arcgisonline.cn/server/rest/services/Hosted/上海市非紧急事件采集应用/FeatureServer"
+      	});
+      	
+
+      	var map1 = new Map({
+      		basemap: "topo",
+      		layers: [flayer]
+      	});
+
+      	var view1 = new MapView({
+      		container: "viewDiv",
+      		map: map1,
+      		zoom: 8,
+      		center: [121, 31] // longitude, latitude
+      	});
+
+      	var legend1 = new Legend({
+      		view: view1,
+      		layerInfos: [
+            {
+            	layer: flayer,
+            	title: "事件类型"
+            }
+          ]
+      	});
+
+      	view1.ui.add(legend1, "bottom-right");
+
+      	var scaleBar1 = new ScaleBar({
+      		view: view1,
+      		style: "ruler",
+      		unit: "non-metric"
+      	});
+
+      	view1.ui.add(scaleBar1, {
+      		position: "bottom-left"
+      	});
+
+      	var coordsWidget = document.createElement("div");
+      	coordsWidget.id = "coordsWidget";
+      	coordsWidget.className = "esri-widget esri-component";
+      	coordsWidget.style.padding = "7px 15px 5px";
+
+      	view1.ui.add(coordsWidget, "bottom-right");
+      	function showCoordinates(pt) {
+      		var coords =
+            "Lat/Lon " +
+            pt.latitude.toFixed(3) +
+            " " +
+            pt.longitude.toFixed(3) +
+            " | Scale 1:" +
+            Math.round(view1.scale * 1) / 1 +
+            " | Zoom " +
+            view1.zoom;
+      		coordsWidget.innerHTML = coords;
+      	}
+      	view1.watch("stationary", function (isStationary) {
+      		showCoordinates(view1.center);
+      	});
+
+      	view1.on("pointer-move", function (evt) {
+      		showCoordinates(view1.toMap({ x: evt.x, y: evt.y }));
+      	});
+  
+  
+        var compass = new Compass({
+          view: view1
+        });
+        
+       view1.ui.add(compass, "top-left");
+	   
+	   
+	   var editor = new Editor({
+	     view: view1
+	   });
+	   
+	   view1.ui.add(editor, "top-right");
+	   
+ 
+	  });
+    </script>
+  </head>
+
+  <body  class="box8">
+	 <div class="box0">
+		 <div id="i1" class="box9">上海市紧急事件收集调查&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+		     <script>
+		         function func(){
+		             let tag = document.getElementById('i1');
+		             let content = tag.innerText;
+		             let f = content.charAt(0);
+		             let l = content.substring(1, content.length);
+		             let new_content = l + f;
+		             tag.innerText = new_content
+		         }
+		         setInterval('func()',1000)
+		     </script>
+		 					
+	 </div>
+	 <div class="box7">
+
+		 <div class="box3">
+		 		 <div id="viewDiv"></div>
+		 </div>
+
+		 <div class="box6">
+			 <div class="box12">
+				 <p align="center">累了吗？来玩个游戏放松一下吧</p>
+				 <p align="center">(点击色块求解小游戏)</p>
+			 </div>
+		 	<div class="box1">
+				<div class="box13">
+
+				<table width="200" height="135" border="0" cellpadding="0" cellspacing="1">
+				   <tr align="center">
+				     <td bgcolor="#0099FF" width="25%" id="0-0" onclick="ct(this)">A</td>
+				     <td bgcolor="#0099FF" width="25%" id="0-1" onclick="ct(this)">B</td>
+				     <td bgcolor="#0099FF" width="25%" id="0-2" onclick="ct(this)">C</td>
+				     <td bgcolor="#0099FF" width="25%" id="0-3" onclick="ct(this)">D</td>
+				   </tr>
+				  <tr align="center" width="90">
+				     <td bgcolor="#0099FF" width="25%" id="1-0" onclick="ct(this)">E</td>
+				     <td bgcolor="#0099FF" width="25%" id="1-1" onclick="ct(this)">F</td>
+				     <td bgcolor="#0099FF" width="25%" id="1-2" onclick="ct(this)">G</td>
+				     <td bgcolor="#0099FF" width="25%" id="1-3" onclick="ct(this)">H</td>
+				   </tr>
+				   <tr align="center" width="90">
+				     <td bgcolor="#0099FF" width="25%" id="2-0" onclick="ct(this)">I</td>
+				     <td bgcolor="#0099FF" width="25%" id="2-1" onclick="ct(this)">J</td>
+				     <td bgcolor="#0099FF" width="25%" id="2-2" onclick="ct(this)">Q</td>
+				     <td bgcolor="#FF9999" id="2-3" onclick="resetBox()"> </td>
+				   </tr>
+				</table>
+				<h3 id="mm"></h3><h3 id="gg"></h3>
+			  </div>
+			</div>
+			
+		 	<div class="box5">
+				
+				<p align="center" class="box14">简易画板，体验一下吧！</p>
+				<div class="fa">
+				    <div class="top">
+				        <div id="color">
+				            请选择画笔颜色：
+				            <input class="i1" type="button" value="" />
+				            <input class="i2" type="button" value="" />
+				            <input class="i3" type="button" value="" />
+				            <input class="i4" type="button" value="" />
+				            <input class="i5" type="button" value="" />
+				            <input class="i6" type="button" value="" />
+				            <input class="i7" type="button" value="" />
+				            <input class="i8" type="button" value="" />
+				            <input class="i9" type="button" value="" />
+				        </div>
+				        <div class="font" id="font">
+				            请选择画笔的宽度：
+				            <input type="button" value="细" />
+				            <input type="button" value="中" class="grea"/>
+				            <input type="button" value="粗" />
+				        </div>
+				        <div>
+				            <span id="error">如果有错误，请使用橡皮擦：</span>
+				            <input id="eraser" style="width:60px;font-size:14px;"type="button" value="橡皮擦" />
+				        </div>
+				  <input id="clear" type="button" value="清除画布" style="width:80px;"/>
+				  <input id="revocation" type="button" value="撤销" style="width:80px;"/>
+				  <input id="imgurl" type="button" value="导出图片路径" style="width:80px;"/>
+				    </div>
+				    <canvas id="canvas" width="450" height="200">您的浏览器不支持 canvas 标签</canvas>
+				    <div id="div1"></div>
+				</div>
+				<div id="html">
+				
+				</div>
+				<script>
+				(function(){
+				    var paint={
+				        init:function()
+				        {
+				            this.load();
+				            
+				        },
+				        load:function()
+				        {   
+				            this.x=[];//记录鼠标移动是的X坐标
+				            this.y=[];//记录鼠标移动是的Y坐标
+				            this.clickDrag=[];
+				            this.lock=false;//鼠标移动前，判断鼠标是否按下
+				            this.isEraser=false;
+				            //this.Timer=null;//橡皮擦启动计时器
+				            //this.radius=5;
+				            this.storageColor="#000000";
+				            this.eraserRadius=15;//擦除半径值
+				            this.color=["#000000","#FF0000","#80FF00","#00FFFF","#808080","#FF8000","#408080","#8000FF","#CCCC00"];//画笔颜色值
+				            this.fontWeight=[2,5,8];
+				            this.$=function(id){return typeof id=="string"?document.getElementById(id):id;};
+				            this.canvas=this.$("canvas");
+				            if (this.canvas.getContext) {
+				            } else {
+				                alert("您的浏览器不支持 canvas 标签");
+				                return;
+				            }
+				            this.cxt=this.canvas.getContext('2d');
+				            this.cxt.lineJoin = "round";//context.lineJoin - 指定两条线段的连接方式
+				            this.cxt.lineWidth = 5;//线条的宽度
+				            this.iptClear=this.$("clear");
+				            this.revocation=this.$("revocation");
+				            this.imgurl=this.$("imgurl");//图片路径按钮
+				            this.w=this.canvas.width;//取画布的宽
+				            this.h=this.canvas.height;//取画布的高 
+				            this.touch =("createTouch" in document);//判定是否为手持设备
+				            this.StartEvent = this.touch ? "touchstart" : "mousedown";//支持触摸式使用相应的事件替代
+				         this.MoveEvent = this.touch ? "touchmove" : "mousemove";
+				         this.EndEvent = this.touch ? "touchend" : "mouseup";
+				         this.bind();
+				        },
+				        bind:function()
+				        {
+				            var t=this;
+				            /*清除画布*/
+				            this.iptClear.onclick=function()
+				            {
+				                t.clear();
+				            };
+				            /*鼠标按下事件，记录鼠标位置，并绘制，解锁lock，打开mousemove事件*/
+				            this.canvas['on'+t.StartEvent]=function(e)
+				            {   
+				                var touch=t.touch ? e.touches[0] : e; 
+				                var _x=touch.clientX - touch.target.offsetLeft;//鼠标在画布上的x坐标，以画布左上角为起点
+				                var _y=touch.clientY - touch.target.offsetTop;//鼠标在画布上的y坐标，以画布左上角为起点             
+				                if(t.isEraser)
+				                {
+				                /*
+				                    t.cxt.globalCompositeOperation = "destination-out";
+				                    t.cxt.beginPath();
+				                    t.cxt.arc(_x, _y,t.eraserRadius, 0, Math.PI * 2);
+				                    t.cxt.strokeStyle = "rgba(250,250,250,0)";
+				                    t.cxt.fill();
+				                    t.cxt.globalCompositeOperation = "source-over";
+				                    */
+				                    t.resetEraser(_x,_y,touch);
+				                }else
+				                {
+				                    t.movePoint(_x,_y);//记录鼠标位置
+				                    t.drawPoint();//绘制路线
+				                }
+				                t.lock=true;
+				            };
+				            /*鼠标移动事件*/
+				            this.canvas['on'+t.MoveEvent]=function(e)
+				            {
+				                var touch=t.touch ? e.touches[0] : e;
+				                if(t.lock)//t.lock为true则执行
+				                {
+				                    var _x=touch.clientX - touch.target.offsetLeft;//鼠标在画布上的x坐标，以画布左上角为起点
+				                    var _y=touch.clientY - touch.target.offsetTop;//鼠标在画布上的y坐标，以画布左上角为起点
+				                    if(t.isEraser)
+				                    {
+				                        //if(t.Timer)clearInterval(t.Timer);
+				                        //t.Timer=setInterval(function(){
+				                            t.resetEraser(_x,_y,touch);
+				                        //},10);
+				                    }
+				                    else
+				                    {
+				                        t.movePoint(_x,_y,true);//记录鼠标位置
+				                        t.drawPoint();//绘制路线
+				                    }
+				                }
+				            };
+				            this.canvas['on'+t.EndEvent]=function(e)
+				            {
+				                /*重置数据*/
+				                t.lock=false;
+				                t.x=[];
+				                t.y=[];
+				                t.clickDrag=[];
+				                clearInterval(t.Timer);
+				                t.Timer=null;
+				                
+				            };
+				            this.revocation.onclick=function()
+				            {
+				                t.redraw();
+				            };
+				            this.changeColor();
+				            this.imgurl.onclick=function()
+				            {
+				                t.getUrl();
+				            };
+				            /*橡皮擦*/
+				            this.$("eraser").onclick=function(e)
+				         {
+				             t.isEraser=true;
+				                t.$("error").style.color="red";
+				                t.$("error").innerHTML="您已使用橡皮擦！";
+				         };
+				        },
+				        movePoint:function(x,y,dragging)
+				        {   
+				            /*将鼠标坐标添加到各自对应的数组里*/
+				            this.x.push(x);
+				            this.y.push(y);
+				            this.clickDrag.push(y);
+				        },
+				        drawPoint:function(x,y,radius)
+				        {
+				            for(var i=0; i < this.x.length; i++)//循环数组
+				            {   
+				                this.cxt.beginPath();//context.beginPath() , 准备绘制一条路径
+				                
+				                if(this.clickDrag[i] && i){//当是拖动而且i!=0时，从上一个点开始画线。
+				                    this.cxt.moveTo(this.x[i-1], this.y[i-1]);//context.moveTo(x, y) , 新开一个路径，并指定路径的起点
+				                }else{
+				                    this.cxt.moveTo(this.x[i]-1, this.y[i]);
+				                }
+				                this.cxt.lineTo(this.x[i], this.y[i]);//context.lineTo(x, y) , 将当前点与指定的点用一条笔直的路径连接起来
+				                this.cxt.closePath();//context.closePath() , 如果当前路径是打开的则关闭它
+				                this.cxt.stroke();//context.stroke() , 绘制当前路径
+				            }
+				        },
+				        clear:function()
+				        {
+				            this.cxt.clearRect(0, 0, this.w, this.h);//清除画布，左上角为起点
+				        },
+				        redraw:function()
+				        {  
+				            /*撤销*/
+				            this.cxt.restore();  
+				            
+				        },  
+				        preventDefault:function(e){
+				            /*阻止默认*/
+				            var touch=this.touch ? e.touches[0] : e;
+				      if(this.touch)touch.preventDefault();
+				      else window.event.returnValue = false;
+				     },
+				     changeColor:function()
+				     {
+				         /*为按钮添加事件*/
+				         var t=this,iptNum=this.$("color").getElementsByTagName("input"),fontIptNum=this.$("font").getElementsByTagName("input");
+				         for(var i=0,l=iptNum.length;i<l;i++)
+				         {
+				             iptNum[i].index=i;
+				             iptNum[i].onclick=function()
+				             {
+				                 t.cxt.save();
+				                 t.cxt.strokeStyle = t.color[this.index];
+				                 t.storageColor=t.color[this.index];
+				                 t.$("error").style.color="#000";
+				                 t.$("error").innerHTML="如果有错误，请使用橡皮擦：";
+				                 t.cxt.strokeStyle = t.storageColor;
+				                 t.isEraser=false;
+				             }
+				         }
+				         for(var i=0,l=fontIptNum.length;i<l;i++)
+				         {
+				             t.cxt.save();
+				             fontIptNum[i].index=i;
+				             fontIptNum[i].onclick=function()
+				             {
+				                 t.changeBackground(this.index);
+				                 t.cxt.lineWidth = t.fontWeight[this.index];
+				                 t.$("error").style.color="#000";
+				                 t.$("error").innerHTML="如果有错误，请使用橡皮擦：";
+				                 t.isEraser=false;
+				                 t.cxt.strokeStyle = t.storageColor;
+				             }
+				         }
+				     },
+				     changeBackground:function(num)
+				     {
+				         /*添加画笔粗细的提示背景颜色切换，灰色为当前*/
+				         var fontIptNum=this.$("font").getElementsByTagName("input");
+				         for(var j=0,m=fontIptNum.length;j<m;j++)
+				            {
+				                fontIptNum[j].className="";
+				                if(j==num) fontIptNum[j].className="grea";
+				            }
+				     },
+				     getUrl:function()
+				     {
+				           this.$("html").innerHTML=this.canvas.toDataURL();
+				        },
+				        resetEraser:function(_x,_y,touch)
+				     {   
+				         
+				         /*使用橡皮擦-提醒*/
+				         var t=this;
+				            //this.cxt.lineWidth = 30;
+				            /*source-over 默认,相交部分由后绘制图形的填充(颜色,渐变,纹理)覆盖,全部浏览器通过*/
+				            t.cxt.globalCompositeOperation = "destination-out";
+				            t.cxt.beginPath();
+				            t.cxt.arc(_x, _y, t.eraserRadius, 0, Math.PI * 2);
+				            t.cxt.strokeStyle = "rgba(250,250,250,0)";
+				            t.cxt.fill();
+				            t.cxt.globalCompositeOperation = "source-over"
+				     }
+				     
+				        
+				    };
+				    paint.init();
+				})();
+				</script>
+				
+				
+			</div> 
+		 </div>
+	 </div>
+	 
+  </body>
+</html>
+<script type="text/javascript"> 
+ function $(element){return document.getElementById(element);}
+ 
+ var count = 0;//总次数
+ var list = [];
+ var box = [
+  [1, 1, 1, 1],
+  [1, 1, 1, 1],
+  [1, 1, 1, 0],
+ ];
+ var maxX = 2; //最大行
+ var maxY = 3; //最大列
+ 
+ var offsets = [
+  [-1, 0],[1, 0],[0, -1],[0, 1]
+ ];
+ 
+ function on_board(p){
+  return ( (p[0] >= 0) && (p[0] <= maxX) && (p[1] >= 0) && (p[1] <= maxY) )?true:false;
+ }
+ function check(){
+  var m = 0;
+  for(var i=0; i<3; i++){
+   for(var j=0; j<4; j++){
+    m += box[i][j];
+   }
+  }
+  if(-11 == m)return true;
+  return false;
+ }
+ function ct(o){
+  var p = o.id.split('-');
+  //#33CC99
+  if(1 == box[p[0]][p[1]]){ //可操作
+   box[p[0]][p[1]] = 0;
+   $(p[0] + '-' + p[1]).bgColor = '#33CC99';
+   
+   //处理临点
+   for(var i=0; i<4; i++){
+    var np = [parseInt(p[0]) + offsets[i][0], parseInt(p[1]) + offsets[i][1]];
+    if(on_board(np) && (np[0] + np[1] < 5)){
+     if(1 == box[np[0]][np[1]]){
+      box[np[0]][np[1]] = -1;
+      $(np[0] + '-' + np[1]).bgColor = '#33CC99';
+     }else{
+      box[np[0]][np[1]] = 1;
+      $(np[0] + '-' + np[1]).bgColor = '#0099FF';
+     }
+    }
+   }
+   
+   list.push(o.innerHTML);
+   count++;
+   if(check()){
+    $('mm').innerHTML = '恭喜过关，总次数：' + count;
+    $('gg').innerHTML = list;
+    return;
+   }
+   
+   $('mm').innerHTML = '尝试次数：' + count;
+   $('gg').innerHTML = list;
+  }  
+ }
+ function resetBox(){
+  for(var i=0; i<3; i++){
+   for(var j=0; j<4; j++){
+    box[i][j] = 1;
+    $(i + '-' + j).bgColor = '#0099FF';
+   }
+  }
+  box[2][3] = 0;
+  $(2 + '-' + 3).bgColor = '#FF9999';
+  
+  list = [];
+  $('mm').innerHTML = '';
+  $('gg').innerHTML = '';
+ }
+</script>
